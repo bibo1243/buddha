@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>相片集散地</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Outfit:wght@400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <nav class="app-nav">
+        <div class="logo">
+            <i class="fas fa-images"></i> <span>相片集散地</span>
+        </div>
+        <div class="nav-controls">
+            <button id="btnDirector" class="nav-btn active" title="主任勉勵">
+                <i class="fas fa-user-tie"></i> 主任勉勵
+            </button>
+            <button id="btnPlayground" class="nav-btn" title="班員希望卡合集">
+                <i class="fas fa-users"></i> 班員希望卡合集
+            </button>
+        </div>
+    </nav>
+
+    <main id="appContent">
+        <!-- View 1: Director Slideshow -->
+        <section id="sectionDirector" class="view-section active">
+            <div class="slideshow-stage">
+                <div class="photo-frame" id="directorFrame">
+                    <img id="directorImg" src="" alt="Director Photo">
+                </div>
+
+                <button id="prevBtn" class="control-btn prev"><i class="fas fa-chevron-left"></i></button>
+                <button id="nextBtn" class="control-btn next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div class="slide-info">
+                <span id="slideCounter">1 / 10</span>
+                <p class="instruction-text">點擊箭頭或照片切換下一張</p>
+            </div>
+        </section>
+
+        <!-- View 2: Member Drag Playground -->
+        <section id="sectionPlayground" class="view-section">
+            <div id="playgroundCanvas">
+                <!-- Images will be generated here -->
+                <div class="playground-hint">
+                    <i class="fas fa-hand-pointer"></i> 拖曳照片自由排列
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

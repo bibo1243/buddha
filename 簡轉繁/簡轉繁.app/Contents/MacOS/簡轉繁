@@ -1,0 +1,11 @@
+#!/bin/bash
+# 簡轉繁 macOS App 啟動腳本
+
+# 取得腳本所在目錄
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+APP_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+RESOURCES_DIR="$APP_DIR/Contents/Resources"
+
+# 執行 Python 腳本
+cd "$RESOURCES_DIR"
+/usr/bin/python3 "$RESOURCES_DIR/clipboard_converter.py"

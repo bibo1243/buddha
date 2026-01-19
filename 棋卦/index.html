@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>棋卦 - 靈性占卜與二〇二六丙午年運勢</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>棋卦占卜</h1>
+            <p class="subtitle">五子運勢 • 丙午流年 • 靈性指引</p>
+        </header>
+
+        <main>
+            <!-- Divination Section -->
+            <section class="divination-section">
+                <div class="intro-text">
+                    <p>請靜心默念您的問題，或專注於當下的狀態。</p>
+                    <p class="note">原則：一事一問，有疑問不卜。</p>
+                </div>
+
+                <div class="board-area">
+                    <div class="chess-slots" id="chess-slots">
+                        <!-- Slots will be generated here -->
+                        <div class="slot-placeholder">?</div>
+                        <div class="slot-placeholder">?</div>
+                        <div class="slot-placeholder">?</div>
+                        <div class="slot-placeholder">?</div>
+                        <div class="slot-placeholder">?</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="mode-selection">
+                        <button id="mode-5-btn" class="btn-mode active">五子宮位卦 (全方位)</button>
+                        <button id="mode-3-btn" class="btn-mode">三子因果卦 (問事)</button>
+                    </div>
+                    <div class="action-area">
+                        <button id="draw-btn" class="btn-primary">誠心抽棋</button>
+                        <button id="reset-btn" class="btn-secondary hidden">重新占卜</button>
+                    </div>
+                </div>
+
+                <div id="result-interpretation" class="result-area hidden">
+                    <h3>卦象指引</h3>
+                    <div class="interpretation-grid" id="interpretation-grid">
+                        <!-- Dynamic Content -->
+                    </div>
+                    <p class="reminder">註：五個棋子占卜法中，紅黑棋無絕對好壞之分，重點在於棋子象徵的內涵與位置的對應。</p>
+                </div>
+            </section>
+
+            <!-- Wisdom / Notes Section -->
+            <section class="wisdom-section">
+                <h2>靈性與流年筆記</h2>
+
+                <div class="notebook">
+                    <article>
+                        <h3>二〇二六 丙午年 (馬年) 運勢</h3>
+                        <ul>
+                            <li><strong>運程特質：</strong>
+                                <ul>
+                                    <li>這是一個人際關係虛虛實實、真真假假的一年。</li>
+                                    <li>遭束縛（礙手礙腳，被誤會），居下風。遇風險，受委屈。70%的人都會碰到。</li>
+                                    <li>丙年不是出頭年，適合反省低調。好的要低調，不好的要反省。</li>
+                                </ul>
+                            </li>
+                            <li><strong>造化與機會：</strong>
+                                <ul>
+                                    <li><strong>專業技能 (土) - 避開 AI 衝擊：</strong>
+                                        <ul>
+                                            <li>要往「土」走，專注於「動手腳」的技術提升。</li>
+                                            <li>腦力工作者易被 AI 取代，但「水電、木工、廚師、安撫人心」的技能無法被取代。</li>
+                                            <li>2026 是累積實力的一年，與其在火氣上打轉，不如累積個人實力。</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>情緒管理 (火) - 陽火之年：</strong>
+                                        <ul>
+                                            <li>今年是「陽火」（看得見的火），雖火災多但可預防。</li>
+                                            <li>真正可怕的是「情緒之火」。火往上是動力，往下是情緒。</li>
+                                            <li><strong>數字密碼：</strong> 2026
+                                                (2+0+2+6=10=1)，象徵「父親」角色，易固執、嚴肅、缺乏彈性。要避免「火燒功德林」。</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>和合 (乾卦) - 內心的核桃：</strong>
+                                        <ul>
+                                            <li>每個人內心都有自己想要的「核桃」（原始慾望/本我）。</li>
+                                            <li><strong>切勿：</strong> 對方想要核桃，你卻強塞蘋果、香蕉。這就是障礙別人。</li>
+                                            <li><strong>要：</strong> 給人方便，助人成長，給人退路。</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><strong>四化星詳細運作：</strong>
+
+                                <ul>
+                                    <li><span class="star-name">廉貞化忌</span>：是非多、血光、車禍。亦正亦邪。穩扎穩打，做有把握的事。留意心血管健康。</li>
+                                    <li><span class="star-name">天同化祿</span>：要有赤子之心，莫忘初衷，以此心念可得財。</li>
+                                    <li><span class="star-name">天機化權</span>：掌握優勢，用聰明才智為大眾服務，累積福德。</li>
+                                    <li><span class="star-name">文昌化科</span>：用正向、積極樂觀的才智去平衡廉貞化忌。</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </article>
+
+                    <article>
+                        <h3>靈性修行與生活哲學</h3>
+                        <ul>
+                            <li><strong>生命主宰</strong>：生命沒有主宰權時，無法拓展靈性。心境的安定才是真正的求安定。</li>
+                            <li><strong>修行本質</strong>：為什麼命運還是很苦？因為沒有真正的修行，習性沒有調整。不要讓身體拖垮精神。</li>
+                            <li><strong>佛門四大事 (與法相會)</strong>：
+                                <ol>
+                                    <li><strong>上殿 (課誦)</strong>：產生好的迴盪，代謝不好的能量。</li>
+                                    <li><strong>出坡 (勞務)</strong>：枯燥的事愈做愈有趣，累積堅持力。</li>
+                                    <li><strong>過堂 (用齋)</strong>：吃簡單的好食物，接地氣，感恩天地。</li>
+                                    <li><strong>坐香 (靜坐)</strong>：六神有主，提升意識波，沉澱能量。</li>
+                                </ol>
+                            </li>
+                            <li><strong>天運循環與金融週期：</strong>
+                                <ul>
+                                    <li><strong>甲年</strong>：戰爭年。台灣相對有福氣，眾神關照（神明也需要人際交流）。</li>
+                                    <li><strong>戊年</strong>：黑暗年，判斷易失準。</li>
+                                    <li><strong>丁年</strong>：多災年（人多口雜）。<strong>2027 (丁未年)</strong> 是「陰火」，危機四伏（看不到的火）。
+                                    </li>
+                                    <li><strong>金融風暴 (逢7必變)：</strong>
+                                        <ul>
+                                            <li>歷史規律顯示，西元尾數為 7 的年份常有金融危機 (1987, 1997, 2007)。</li>
+                                            <li>2026、2027 都在為 2028 做準備。2027 要特別注意錢財瞬間消失的風險，投資務必謹慎。</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </article>
+
+                    <article>
+                        <h3>棋卦原理</h3>
+                        <p>透過棋卦將所問到的問題找內涵。藉問題藉力使力，而不是障礙。</p>
+                        <p><strong>占卜模式：</strong></p>
+                        <ul>
+                            <li><strong>三子因果卦 (問單一事件)：</strong>
+                                <ul>
+                                    <li><strong>因 (第一顆)：</strong> 過去的成因、動機。</li>
+                                    <li><strong>緣 (第二顆)：</strong> 過程、現在的狀態、助力或阻力。</li>
+                                    <li><strong>果 (第三顆)：</strong> 未來的結果、方向。</li>
+                                </ul>
+                            </li>
+                            <li><strong>五子宮位卦 (問整體運勢)：</strong>
+                                <ol>
+                                    <li><strong>自己：</strong> 當下狀態。</li>
+                                    <li><strong>配偶 / 妻財：</strong> 金錢與親密關係。</li>
+                                    <li><strong>朋友 / 手足：</strong> 人際助力。</li>
+                                    <li><strong>長輩 / 事業：</strong> 貴人與工作運。</li>
+                                    <li><strong>子孫 / 財庫：</strong> 投資與晚運。</li>
+                                </ol>
+                            </li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 棋卦靈性指引工具</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

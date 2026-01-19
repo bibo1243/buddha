@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活動企劃管理系統</title>
+    <meta name="description" content="專業的活動企劃工具，幫助您規劃完美的活動">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- 側邊欄 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-calendar-check"></i>
+                <span>活動企劃</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-section="overview">
+                    <i class="fas fa-home"></i>
+                    <span>總覽</span>
+                </a>
+                <a href="#" class="nav-item" data-section="basic-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>基本資訊</span>
+                </a>
+                <a href="#" class="nav-item" data-section="preparation">
+                    <i class="fas fa-tasks"></i>
+                    <span>前置準備</span>
+                </a>
+                <a href="#" class="nav-item" data-section="schedule">
+                    <i class="fas fa-clock"></i>
+                    <span>流程規劃</span>
+                </a>
+                <a href="#" class="nav-item" data-section="content">
+                    <i class="fas fa-file-alt"></i>
+                    <span>活動內容</span>
+                </a>
+                <a href="#" class="nav-item" data-section="participants">
+                    <i class="fas fa-users"></i>
+                    <span>參與人員</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-export" id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    <span>匯出企劃書</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- 主要內容區 -->
+        <main class="main-content">
+            <!-- 頂部標題列 -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">活動企劃總覽</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-save" id="saveBtn">
+                        <i class="fas fa-save"></i>
+                        <span>儲存</span>
+                    </button>
+                    <button class="btn-new" id="newEventBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>新增活動</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 內容區域 -->
+            <div class="content-wrapper">
+                <!-- 總覽區塊 -->
+                <section id="overview" class="section active">
+                    <div class="overview-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="statEventName">尚未設定活動</h3>
+                                <p>活動名稱</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="statDate">--</h3>
+                                <p>活動日期</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="statParticipants">0</h3>
+                                <p>參與人數</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-list-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="statProgress">0%</h3>
+                                <p>準備進度</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-grid">
+                        <div class="overview-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-bullseye"></i> 活動目的</h3>
+                            </div>
+                            <div class="card-body">
+                                <p id="overviewPurpose" class="placeholder-text">請在「基本資訊」中填寫活動目的</p>
+                            </div>
+                        </div>
+
+                        <div class="overview-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-timeline"></i> 今日流程預覽</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="overviewSchedule" class="mini-timeline">
+                                    <p class="placeholder-text">請在「流程規劃」中新增活動流程</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="overview-card full-width">
+                            <div class="card-header">
+                                <h3><i class="fas fa-tasks"></i> 待辦事項</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="overviewTasks" class="task-preview">
+                                    <p class="placeholder-text">請在「前置準備」中新增待辦事項</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 基本資訊區塊 -->
+                <section id="basic-info" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-info-circle"></i> 基本資訊</h2>
+                    </div>
+                    <div class="form-container">
+                        <div class="form-group">
+                            <label for="eventName">
+                                <i class="fas fa-heading"></i> 活動主題 / 名稱
+                            </label>
+                            <input type="text" id="eventName" placeholder="請輸入活動名稱">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventDate">
+                                    <i class="fas fa-calendar"></i> 活動日期
+                                </label>
+                                <input type="date" id="eventDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventTime">
+                                    <i class="fas fa-clock"></i> 開始時間
+                                </label>
+                                <input type="time" id="eventTime">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventLocation">
+                                <i class="fas fa-location-dot"></i> 活動地點
+                            </label>
+                            <input type="text" id="eventLocation" placeholder="請輸入活動地點">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventPurpose">
+                                <i class="fas fa-bullseye"></i> 活動目的
+                            </label>
+                            <textarea id="eventPurpose" rows="4" placeholder="請描述活動的目的與預期成效"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventTarget">
+                                <i class="fas fa-user-group"></i> 目標對象
+                            </label>
+                            <input type="text" id="eventTarget" placeholder="例如：全體員工、新進人員、特定部門等">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventBudget">
+                                <i class="fas fa-coins"></i> 預算金額
+                            </label>
+                            <input type="number" id="eventBudget" placeholder="請輸入預算金額">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 前置準備區塊 -->
+                <section id="preparation" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tasks"></i> 前置準備</h2>
+                    </div>
+
+                    <div class="prep-tabs">
+                        <button class="prep-tab active" data-tab="seating">
+                            <i class="fas fa-chair"></i> 座位安排
+                        </button>
+                        <button class="prep-tab" data-tab="refreshments">
+                            <i class="fas fa-mug-hot"></i> 茶點準備
+                        </button>
+                        <button class="prep-tab" data-tab="checklist">
+                            <i class="fas fa-list-check"></i> 待辦清單
+                        </button>
+                    </div>
+
+                    <!-- 座位安排 -->
+                    <div id="seating" class="prep-content active">
+                        <div class="prep-header">
+                            <h3>座位配置</h3>
+                            <div class="seating-controls">
+                                <label>
+                                    排列方式：
+                                    <select id="seatingStyle">
+                                        <option value="theater">劇院式</option>
+                                        <option value="classroom">教室式</option>
+                                        <option value="u-shape">U型</option>
+                                        <option value="round">圓桌</option>
+                                        <option value="banquet">宴會式</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    座位數：
+                                    <input type="number" id="seatCount" value="30" min="1" max="500">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="seating-preview">
+                            <div id="seatingDiagram" class="seating-diagram">
+                                <!-- 座位圖會由 JS 生成 -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="seatingNotes">
+                                <i class="fas fa-sticky-note"></i> 座位備註
+                            </label>
+                            <textarea id="seatingNotes" rows="3" placeholder="例如：前排保留給主管、需設置輪椅區等"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 茶點準備 -->
+                    <div id="refreshments" class="prep-content">
+                        <div class="prep-header">
+                            <h3>茶點清單</h3>
+                            <button class="btn-add" id="addRefreshmentBtn">
+                                <i class="fas fa-plus"></i> 新增項目
+                            </button>
+                        </div>
+                        <div class="refreshment-list" id="refreshmentList">
+                            <!-- 茶點項目會由 JS 生成 -->
+                        </div>
+                        <div class="refreshment-summary">
+                            <div class="summary-item">
+                                <span>總項目數</span>
+                                <strong id="refreshmentCount">0</strong>
+                            </div>
+                            <div class="summary-item">
+                                <span>預估費用</span>
+                                <strong id="refreshmentCost">$0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 待辦清單 -->
+                    <div id="checklist" class="prep-content">
+                        <div class="prep-header">
+                            <h3>待辦事項</h3>
+                            <button class="btn-add" id="addTaskBtn">
+                                <i class="fas fa-plus"></i> 新增待辦
+                            </button>
+                        </div>
+                        <div class="task-filter">
+                            <button class="filter-btn active" data-filter="all">全部</button>
+                            <button class="filter-btn" data-filter="pending">待完成</button>
+                            <button class="filter-btn" data-filter="completed">已完成</button>
+                        </div>
+                        <div class="task-list" id="taskList">
+                            <!-- 待辦事項會由 JS 生成 -->
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="taskProgressBar"></div>
+                            </div>
+                            <span id="taskProgressText">0% 完成</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 流程規劃區塊 -->
+                <section id="schedule" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-clock"></i> 流程規劃</h2>
+                        <button class="btn-add" id="addScheduleBtn">
+                            <i class="fas fa-plus"></i> 新增流程
+                        </button>
+                    </div>
+
+                    <div class="schedule-container">
+                        <div class="timeline-header">
+                            <div class="timeline-ruler" id="timelineRuler">
+                                <!-- 時間刻度會由 JS 生成 -->
+                            </div>
+                        </div>
+                        <div class="timeline-body" id="timelineBody">
+                            <!-- 流程項目會由 JS 生成 -->
+                        </div>
+                    </div>
+
+                    <div class="schedule-list">
+                        <h3><i class="fas fa-list"></i> 流程清單</h3>
+                        <div id="scheduleList" class="schedule-items">
+                            <!-- 流程清單會由 JS 生成 -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 活動內容區塊 -->
+                <section id="content" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-file-alt"></i> 活動內容</h2>
+                    </div>
+
+                    <div class="content-editor">
+                        <div class="form-group">
+                            <label for="contentDescription">
+                                <i class="fas fa-align-left"></i> 活動簡介
+                            </label>
+                            <textarea id="contentDescription" rows="4" placeholder="請描述活動的主要內容與亮點"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-list-ol"></i> 活動項目
+                            </label>
+                            <div id="activityItems" class="activity-items">
+                                <!-- 活動項目會由 JS 生成 -->
+                            </div>
+                            <button class="btn-add-activity" id="addActivityBtn">
+                                <i class="fas fa-plus"></i> 新增活動項目
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contentMaterials">
+                                <i class="fas fa-box"></i> 所需物資 / 設備
+                            </label>
+                            <textarea id="contentMaterials" rows="3" placeholder="例如：投影機、麥克風、筆電、白板等"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contentNotes">
+                                <i class="fas fa-sticky-note"></i> 注意事項
+                            </label>
+                            <textarea id="contentNotes" rows="3" placeholder="請填寫活動相關注意事項"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 參與人員區塊 -->
+                <section id="participants" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-users"></i> 參與人員</h2>
+                        <button class="btn-add" id="addParticipantBtn">
+                            <i class="fas fa-user-plus"></i> 新增人員
+                        </button>
+                    </div>
+
+                    <div class="participants-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="participantSearch" placeholder="搜尋人員姓名...">
+                        </div>
+                        <div class="role-filter">
+                            <button class="role-btn active" data-role="all">全部</button>
+                            <button class="role-btn" data-role="host">主辦</button>
+                            <button class="role-btn" data-role="staff">工作人員</button>
+                            <button class="role-btn" data-role="speaker">講者</button>
+                            <button class="role-btn" data-role="attendee">參加者</button>
+                        </div>
+                    </div>
+
+                    <div class="participants-grid" id="participantsGrid">
+                        <!-- 參與人員卡片會由 JS 生成 -->
+                    </div>
+
+                    <div class="participants-summary">
+                        <div class="summary-card">
+                            <i class="fas fa-user-tie"></i>
+                            <span>主辦</span>
+                            <strong id="hostCount">0</strong>
+                        </div>
+                        <div class="summary-card">
+                            <i class="fas fa-user-gear"></i>
+                            <span>工作人員</span>
+                            <strong id="staffCount">0</strong>
+                        </div>
+                        <div class="summary-card">
+                            <i class="fas fa-microphone"></i>
+                            <span>講者</span>
+                            <strong id="speakerCount">0</strong>
+                        </div>
+                        <div class="summary-card">
+                            <i class="fas fa-user"></i>
+                            <span>參加者</span>
+                            <strong id="attendeeCount">0</strong>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- 新增流程 Modal -->
+    <div class="modal" id="scheduleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-clock"></i> <span id="scheduleModalTitle">新增流程</span></h3>
+                <button class="modal-close" id="closeScheduleModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="scheduleTitle">流程名稱</label>
+                    <input type="text" id="scheduleTitle" placeholder="例如：開場致詞、專題演講等">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="scheduleStartTime">開始時間</label>
+                        <input type="time" id="scheduleStartTime">
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleEndTime">結束時間</label>
+                        <input type="time" id="scheduleEndTime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="scheduleHost">負責人</label>
+                    <input type="text" id="scheduleHost" placeholder="請輸入負責人姓名">
+                </div>
+                <div class="form-group">
+                    <label for="scheduleDescription">說明</label>
+                    <textarea id="scheduleDescription" rows="3" placeholder="請輸入流程說明"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="scheduleColor">顏色標記</label>
+                    <div class="color-picker">
+                        <input type="radio" name="scheduleColor" value="#6366f1" id="color1" checked>
+                        <label for="color1" style="background: #6366f1;"></label>
+                        <input type="radio" name="scheduleColor" value="#8b5cf6" id="color2">
+                        <label for="color2" style="background: #8b5cf6;"></label>
+                        <input type="radio" name="scheduleColor" value="#ec4899" id="color3">
+                        <label for="color3" style="background: #ec4899;"></label>
+                        <input type="radio" name="scheduleColor" value="#14b8a6" id="color4">
+                        <label for="color4" style="background: #14b8a6;"></label>
+                        <input type="radio" name="scheduleColor" value="#f59e0b" id="color5">
+                        <label for="color5" style="background: #f59e0b;"></label>
+                        <input type="radio" name="scheduleColor" value="#ef4444" id="color6">
+                        <label for="color6" style="background: #ef4444;"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelScheduleBtn">取消</button>
+                <button class="btn-confirm" id="confirmScheduleBtn">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增參與人員 Modal -->
+    <div class="modal" id="participantModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> <span id="participantModalTitle">新增人員</span></h3>
+                <button class="modal-close" id="closeParticipantModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="participantName">姓名</label>
+                    <input type="text" id="participantName" placeholder="請輸入姓名">
+                </div>
+                <div class="form-group">
+                    <label for="participantRole">角色</label>
+                    <select id="participantRole">
+                        <option value="host">主辦</option>
+                        <option value="staff">工作人員</option>
+                        <option value="speaker">講者</option>
+                        <option value="attendee">參加者</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="participantDepartment">部門 / 單位</label>
+                    <input type="text" id="participantDepartment" placeholder="請輸入部門或單位">
+                </div>
+                <div class="form-group">
+                    <label for="participantPhone">聯絡電話</label>
+                    <input type="tel" id="participantPhone" placeholder="請輸入聯絡電話">
+                </div>
+                <div class="form-group">
+                    <label for="participantEmail">電子郵件</label>
+                    <input type="email" id="participantEmail" placeholder="請輸入電子郵件">
+                </div>
+                <div class="form-group">
+                    <label for="participantNotes">備註</label>
+                    <textarea id="participantNotes" rows="2" placeholder="其他備註事項"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelParticipantBtn">取消</button>
+                <button class="btn-confirm" id="confirmParticipantBtn">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增茶點 Modal -->
+    <div class="modal" id="refreshmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-mug-hot"></i> 新增茶點</h3>
+                <button class="modal-close" id="closeRefreshmentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="refreshmentName">品項名稱</label>
+                    <input type="text" id="refreshmentName" placeholder="例如：咖啡、紅茶、小蛋糕等">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="refreshmentQuantity">數量</label>
+                        <input type="number" id="refreshmentQuantity" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="refreshmentPrice">單價</label>
+                        <input type="number" id="refreshmentPrice" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="refreshmentVendor">供應商</label>
+                    <input type="text" id="refreshmentVendor" placeholder="請輸入供應商名稱">
+                </div>
+                <div class="form-group">
+                    <label for="refreshmentNotes">備註</label>
+                    <textarea id="refreshmentNotes" rows="2" placeholder="例如：需提前預訂、素食選項等"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelRefreshmentBtn">取消</button>
+                <button class="btn-confirm" id="confirmRefreshmentBtn">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增待辦 Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-list-check"></i> 新增待辦</h3>
+                <button class="modal-close" id="closeTaskModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="taskTitle">待辦事項</label>
+                    <input type="text" id="taskTitle" placeholder="請輸入待辦事項">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDueDate">截止日期</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">優先級</label>
+                        <select id="taskPriority">
+                            <option value="low">低</option>
+                            <option value="medium" selected>中</option>
+                            <option value="high">高</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskAssignee">負責人</label>
+                    <input type="text" id="taskAssignee" placeholder="請輸入負責人">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelTaskBtn">取消</button>
+                <button class="btn-confirm" id="confirmTaskBtn">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

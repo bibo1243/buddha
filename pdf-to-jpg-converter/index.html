@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 轉 JPG 極速轉換器</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icon Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <div class="background-glow"></div>
+    
+    <div class="app-container">
+        <header>
+            <h1>PDF to JPG <span class="highlight">Converter</span></h1>
+            <p class="subtitle">批量轉換，極速高效。支援 40+ 檔案同時處理。</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <div class="upload-area" id="drop-zone">
+                <div class="upload-content">
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <h3>拖放 PDF 檔案至此</h3>
+                    <p>或是 <span class="browse-btn" id="browse-btn">點擊瀏覽</span></p>
+                    <input type="file" id="file-input" multiple accept="application/pdf" hidden>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls-area hidden" id="controls-area">
+                <div class="stats">
+                    <span id="file-count">0 個檔案</span>
+                    <span id="total-status">準備就緒</span>
+                </div>
+                <div class="actions">
+                    <button id="convert-all-btn" class="btn primary-btn"><i class="fa-solid fa-bolt"></i> 開始轉換</button>
+                    <button id="clear-all-btn" class="btn secondary-btn"><i class="fa-solid fa-trash"></i> 清空列表</button>
+                </div>
+            </div>
+
+            <!-- File List -->
+            <div class="file-list-container hidden" id="file-list-container">
+                <div class="list-header">
+                    <div>檔案名稱</div>
+                    <div>頁數</div>
+                    <div>狀態</div>
+                    <div>操作</div>
+                </div>
+                <div class="file-list" id="file-list">
+                    <!-- File Items will be injected here -->
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 PDF Converter Pro. Designed for Efficiency.</p>
+        </footer>
+    </div>
+
+    <!-- PDF.js Legacy/Modern handling -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>

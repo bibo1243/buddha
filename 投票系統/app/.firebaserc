@@ -1,0 +1,22 @@
+{
+  "projects": {
+    "default": "moodgrid-diary"
+  },
+  "targets": {
+    "moodgrid-diary": {
+      "hosting": {
+        "voting-app": [
+          "repair-2026-vote"
+        ]
+      }
+    },
+    "repair-website-20251213-v2": {
+      "hosting": {
+        "voting-app": [
+          "repair-2026-vote"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

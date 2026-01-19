@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.leegary.clipboard-converter</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/leegary/小程序/簡轉繁/clipboard_converter.py</string>
+    </array>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <true/>
+    
+    <key>StandardOutPath</key>
+    <string>/Users/leegary/小程序/簡轉繁/logs/output.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/Users/leegary/小程序/簡轉繁/logs/error.log</string>
+    
+    <key>WorkingDirectory</key>
+    <string>/Users/leegary/小程序/簡轉繁</string>
+</dict>
+</plist>

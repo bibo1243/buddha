@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>靜思語選擇器</title>
+    <meta name="description" content="選擇姓名、生成靜思語、存檔並列表顯示">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- 頂部標題 -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h1>佛典法語選擇器</h1>
+                </div>
+                <p class="subtitle">選擇姓名、生成法語、存檔管理</p>
+
+            </div>
+        </header>
+
+        <!-- 主要內容 -->
+        <main class="main-content">
+            <!-- 左側：選擇區 -->
+            <section class="selection-panel">
+                <div class="card">
+                    <h2><i class="fas fa-user"></i> 步驟一：選擇姓名</h2>
+
+                    <div class="name-grid" id="nameGrid">
+                        <!-- 姓名按鈕會由 JS 生成 -->
+                    </div>
+
+                    <div class="custom-name-section">
+                        <div class="input-group">
+                            <input type="text" id="customNameInput" placeholder="輸入其他姓名...">
+                            <button class="btn btn-secondary" id="addCustomNameBtn">
+                                <i class="fas fa-plus"></i> 新增
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="selected-name-display" id="selectedNameDisplay">
+                        <span class="label">已選擇：</span>
+                        <span class="name" id="selectedNameText">尚未選擇</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-tags"></i> 步驟二：選擇類別並生成法語</h2>
+
+                    <div class="category-tags" id="categoryTags">
+                        <button class="category-tag active" data-category="all">
+                            <i class="fas fa-infinity"></i> 全部
+                        </button>
+                        <button class="category-tag" data-category="compassion">
+                            <i class="fas fa-heart"></i> 慈悲
+                        </button>
+                        <button class="category-tag" data-category="wisdom">
+                            <i class="fas fa-lightbulb"></i> 智慧
+                        </button>
+                        <button class="category-tag" data-category="gratitude">
+                            <i class="fas fa-praying-hands"></i> 感恩
+                        </button>
+                        <button class="category-tag" data-category="diligence">
+                            <i class="fas fa-running"></i> 精進
+                        </button>
+                        <button class="category-tag" data-category="general">
+                            <i class="fas fa-star"></i> 通用
+                        </button>
+                    </div>
+
+                    <button class="btn btn-primary btn-large" id="generateQuoteBtn">
+                        <i class="fas fa-random"></i> 隨機生成法語
+                    </button>
+
+                    <div class="quote-display" id="quoteDisplay">
+                        <blockquote id="quoteText">點擊上方按鈕生成法語</blockquote>
+                        <cite id="quoteAuthor"></cite>
+                        <a id="quoteSource" href="#" target="_blank" class="quote-source"
+                            style="display:none; margin-top: 10px; font-size: 0.9rem; color: #666; text-decoration: none;">
+                            <i class="fas fa-external-link-alt"></i> 來源
+                        </a>
+                    </div>
+
+                    <button class="btn btn-success btn-large" id="saveRecordBtn" disabled>
+                        <i class="fas fa-save"></i> 存檔
+                    </button>
+                </div>
+
+
+            </section>
+
+            <!-- 右側：記錄列表 -->
+            <section class="records-panel">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-list"></i> 已存檔記錄</h2>
+                        <div class="header-actions">
+                            <span class="record-count" id="recordCount">0 筆</span>
+                            <button class="btn btn-danger btn-small" id="clearAllBtn" title="清除全部">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="records-list" id="recordsList">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>尚無記錄</p>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="exportBtn" style="display: none;">
+                        <i class="fas fa-download"></i> 匯出記錄
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>靜思語選擇器 &copy; 2026</p>
+        </footer>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+
+
+    <!-- 載入外部法語資料庫 (位於 ../活動企劃/buddhist_quotes.js) -->
+    <script src="../活動企劃/buddhist_quotes.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
