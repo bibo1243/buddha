@@ -253,66 +253,64 @@ main {
     overflow: hidden;
 }
 
-/* Director Area Background Label */
-#directorAreaLabel {
+.playground-hint {
     position: absolute;
-    top: 50%;
-    right: 5%;
-    /* Position on the right */
-    transform: translateY(-50%);
-    font-size: 5rem;
-    font-weight: bold;
-    color: rgba(255, 215, 0, 0.1);
-    /* Faint gold */
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
     pointer-events: none;
     z-index: 0;
-    writing-mode: vertical-rl;
-    /* Vertical text */
-    text-orientation: upright;
-    letter-spacing: 1rem;
-    border: 2px dashed rgba(255, 215, 0, 0.2);
-    padding: 40px;
-    border-radius: 20px;
 }
 
-/* Size Control Slider */
-.size-control-container {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 2000;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px 20px;
-    border-radius: 30px;
+/* Zoom Control */
+.zoom-control {
     display: flex;
     align-items: center;
     gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
     color: #fff;
-    backdrop-filter: blur(5px);
 }
 
-.size-control-container label {
-    font-size: 0.9rem;
-    white-space: nowrap;
-}
-
-input[type=range] {
+#zoomSlider {
+    -webkit-appearance: none;
     width: 150px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    outline: none;
+}
+
+#zoomSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent-color);
+    border-radius: 50%;
     cursor: pointer;
+    border: 2px solid #fff;
 }
 
 .story-card {
     position: absolute;
     background: #fff;
     padding: 10px 10px 30px 10px;
+    /* Polaroid style bottom padding */
     box-shadow: var(--shadow-light);
     transform-origin: center;
-    transition: box-shadow 0.2s, transform 0.2s;
-    /* Removed width transition for smoother drag, controlled by variable */
+    transition: box-shadow 0.2s, transform 0.2s, width 0.2s;
+    /* Added width transition */
     cursor: grab;
     user-select: none;
-    width: var(--card-size, 180px);
-    /* dynamic width */
+    width: 130px;
+    /* Reduced from 200px (approx 35% smaller) */
+    /* Base width, will be overridden by JS for slider */
     z-index: 10;
 }
 

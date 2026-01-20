@@ -75,9 +75,9 @@ function setupDirectorSlideshow() {
 // ==========================================
 // Persistence Logic (Local Storage)
 // ==========================================
-function savePosition(src, left, top, zIndex, transform) {
+function savePosition(src, left, top, zIndex, transform, width) {
     const savedData = JSON.parse(localStorage.getItem('photoPositions')) || {};
-    savedData[src] = { left, top, zIndex, transform };
+    savedData[src] = { left, top, zIndex, transform, width };
     localStorage.setItem('photoPositions', JSON.stringify(savedData));
 }
 
@@ -93,25 +93,24 @@ function loadPosition(src) {
 // Photo Playground (Draggable)
 // ==========================================
 function initPlayground() {
+    setupZoomControl(); // Initialize zoom slider
+
     const containerW = window.innerWidth;
-    const containerH = window.innerHeight;
 
-    // Load saved settings
-    loadCardSize();
+    // Grid Configuration for Deterministic Layout
+    const cardWidth = 140; // Approximate space including margin
+    const cardHeight = 180;
+    const cols = Math.floor((containerW - 100) / cardWidth);
 
-    // Size Control Listener
-    const sizeInput = document.getElementById('cardSizeRange');
-    if (sizeInput) {
-        sizeInput.addEventListener('input', (e) => {
-            const size = e.target.value;
-            document.documentElement.style.setProperty('--card-size', `${size}px`);
-            localStorage.setItem('cardSize', size);
-        });
-    }
+    let currentDirectorRow = 0;
+    let currentDirectorCol = 0;
 
-    // 1. Process Director Photos (Right Area)
+    // Start directors from top center
+    const directorStartX = (containerW - Math.min(cols, appData.directorPhotos.length) * cardWidth) / 2 + 50;
+    const directorStartY = 100;
+
+    // 1. Process Director Photos
     if (appData.directorPhotos) {
-        const rightMargin = 100;
         appData.directorPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
             card.classList.add('director');
@@ -123,35 +122,34 @@ function initPlayground() {
                 card.style.top = saved.top;
                 card.style.zIndex = saved.zIndex || 10;
                 card.style.transform = saved.transform || 'rotate(0deg)';
+                card.style.width = saved.width || '130px';
                 if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
             } else {
-                // Default Right Grid Layout
-                const cardW = 180;
-                const cardH = 220;
-
-                // Arrange 2 columns on the right
-                const cols = 2;
-                const c = index % cols;
-                const r = Math.floor(index / cols);
-
-                // Position relative to right side
-                // x = Width - (Columns * Width) - Margin + (Col Index * Width)
-                // Let's anchor to right: 200px from right edge is center of rightmost col
-
-                const baseX = containerW - 350; // Base start X
-                const baseY = (containerH / 2) - 300; // Center Y offset
-
-                const x = baseX + (c * 160);
-                const y = baseY + (r * 220);
+                // Deterministic Layout (Neat Grid)
+                const x = directorStartX + (currentDirectorCol * cardWidth);
+                const y = directorStartY + (currentDirectorRow * cardHeight);
 
                 card.style.left = `${x}px`;
                 card.style.top = `${y}px`;
-                card.style.transform = `rotate(${Math.random() * 4 - 2}deg)`; // Slight tilt
+                card.style.transform = `rotate(0deg)`;
+
+                // Update grid position
+                currentDirectorCol++;
+                if (currentDirectorCol >= cols) {
+                    currentDirectorCol = 0;
+                    currentDirectorRow++;
+                }
             }
 
             elements.playgroundCanvas.appendChild(card);
         });
     }
+
+    // Determine start Y for members
+    let memberStartX = 50;
+    let memberStartY = directorStartY + (currentDirectorRow + 1) * cardHeight + 50;
+    let currentMemberCol = 0;
+    let currentMemberRow = 0;
 
     // 2. Process Member Photos
     if (appData.memberPhotos) {
@@ -165,20 +163,23 @@ function initPlayground() {
                 card.style.top = saved.top;
                 card.style.zIndex = saved.zIndex || 10;
                 card.style.transform = saved.transform || 'rotate(0deg)';
+                card.style.width = saved.width || '130px';
                 if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
             } else {
-                // Default Random Layout (Left/Center area)
-                const safeW = containerW - 450; // Leave space for Director area
-                const maxLeft = safeW - 150;
-                const maxTop = containerH - 250;
+                // Deterministic Grid Layout
+                const x = memberStartX + (currentMemberCol * cardWidth);
+                const y = memberStartY + (currentMemberRow * cardHeight);
 
-                const randomLeft = Math.floor(Math.random() * maxLeft * 0.9) + 20;
-                const randomTop = Math.floor(Math.random() * maxTop * 0.8) + 50;
-                const randomRot = Math.floor(Math.random() * 40) - 20;
+                card.style.left = `${x}px`;
+                card.style.top = `${y}px`;
+                card.style.transform = `rotate(${((index % 5) - 2) * 2}deg)`;
 
-                card.style.left = `${randomLeft}px`;
-                card.style.top = `${randomTop}px`;
-                card.style.transform = `rotate(${randomRot}deg)`;
+                // Update grid position
+                currentMemberCol++;
+                if (currentMemberCol >= cols) {
+                    currentMemberCol = 0;
+                    currentMemberRow++;
+                }
             }
 
             elements.playgroundCanvas.appendChild(card);
@@ -186,13 +187,17 @@ function initPlayground() {
     }
 }
 
-function loadCardSize() {
-    const savedSize = localStorage.getItem('cardSize');
-    if (savedSize) {
-        document.documentElement.style.setProperty('--card-size', `${savedSize}px`);
-        const input = document.getElementById('cardSizeRange');
-        if (input) input.value = savedSize;
-    }
+function setupZoomControl() {
+    const slider = document.getElementById('zoomSlider');
+    if (!slider) return;
+
+    slider.addEventListener('input', (e) => {
+        const size = e.target.value;
+        const cards = document.querySelectorAll('.story-card');
+        cards.forEach(card => {
+            card.style.width = `${size}px`;
+        });
+    });
 }
 
 function createPolaroid(src) {
@@ -259,7 +264,7 @@ function setupDrag(element) {
         if (isDragging) {
             // Save position on end
             const src = element.dataset.src;
-            savePosition(src, element.style.left, element.style.top, element.style.zIndex, element.style.transform);
+            savePosition(src, element.style.left, element.style.top, element.style.zIndex, element.style.transform, element.style.width);
         }
 
         isDragging = false;
@@ -303,7 +308,7 @@ function setupDrag(element) {
         if (isDragging) {
             // Save position on end
             const src = element.dataset.src;
-            savePosition(src, element.style.left, element.style.top, element.style.zIndex, element.style.transform);
+            savePosition(src, element.style.left, element.style.top, element.style.zIndex, element.style.transform, element.style.width);
         }
 
         isDragging = false;

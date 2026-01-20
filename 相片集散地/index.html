@@ -20,12 +20,13 @@
             <i class="fas fa-images"></i> <span>相片集散地</span>
         </div>
         <div class="nav-controls">
-            <button id="btnDirector" class="nav-btn active" title="常董勉勵">
-                <i class="fas fa-user-tie"></i> 常董勉勵
-            </button>
-            <button id="btnPlayground" class="nav-btn" title="班員希望卡合集">
-                <i class="fas fa-users"></i> 班員希望卡合集
-            </button>
+            <div class="zoom-control">
+                <i class="fas fa-search-minus"></i>
+                <input type="range" id="zoomSlider" min="50" max="300" value="130">
+                <i class="fas fa-search-plus"></i>
+            </div>
+            <!-- Director button hidden via CSS but kept in structure if needed later, or can be removed. 
+                 Keeping simplified structure as per previous requests which hid it via CSS. -->
         </div>
     </nav>
 
@@ -50,19 +51,10 @@
         <!-- View 2: Member Drag Playground -->
         <section id="sectionPlayground" class="view-section">
             <div id="playgroundCanvas">
-                <!-- Director Area Background -->
-                <div id="directorAreaLabel">常董勉勵</div>
-
                 <!-- Images will be generated here -->
                 <div class="playground-hint">
                     <i class="fas fa-hand-pointer"></i> 拖曳照片自由排列
                 </div>
-            </div>
-
-            <!-- Size Control -->
-            <div class="size-control-container">
-                <label for="cardSizeRange"><i class="fas fa-expand-arrows-alt"></i> 照片大小</label>
-                <input type="range" id="cardSizeRange" min="100" max="400" value="180">
             </div>
         </section>
     </main>
