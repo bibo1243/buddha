@@ -100,16 +100,33 @@ function changeSlide(direction) {
 function renderDirectorPhoto(index) {
     const src = appData.directorPhotos[index];
 
-    // Quick fade effect
+    // Reset opacity instantly for transition effect
     elements.directorImg.style.opacity = '0';
+    elements.directorFrame.classList.add('loading');
 
     setTimeout(() => {
+        elements.directorImg.onload = () => {
+            elements.directorImg.style.opacity = '1';
+            elements.directorFrame.classList.remove('loading');
+        };
+
+        elements.directorImg.onerror = () => {
+            console.error('Image failed to load:', src);
+            // Optionally set a placeholder or keep it hidden/low opacity
+            elements.directorImg.alt = '圖片載入失敗: ' + src;
+            elements.directorImg.style.opacity = '0.5';
+            elements.directorFrame.classList.remove('loading');
+        };
+
         elements.directorImg.src = src;
         elements.slideCounter.textContent = `${index + 1} / ${appData.directorPhotos.length}`;
 
-        elements.directorImg.onload = () => {
+        // If image is already complete (cached), manually trigger load handler logic
+        if (elements.directorImg.complete && elements.directorImg.src.indexOf(src) !== -1) {
             elements.directorImg.style.opacity = '1';
-        };
+            elements.directorFrame.classList.remove('loading');
+        }
+
     }, 200);
 }
 
