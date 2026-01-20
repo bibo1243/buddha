@@ -97,112 +97,107 @@ function loadPosition(src) {
 // Photo Playground (Draggable)
 // ==========================================
 function initPlayground() {
-    setupZoomControl(); // Initialize zoom slider
+    // Clear existing content to prevent duplicates on resize
+    elements.playgroundCanvas.innerHTML = '';
+
+    // Add hint back
+    const hint = document.createElement('div');
+    hint.className = 'playground-hint';
+    hint.innerHTML = '<i class="fas fa-hand-pointer"></i> 拖曳照片自由排列';
+    elements.playgroundCanvas.appendChild(hint);
 
     const containerW = window.innerWidth;
+    const containerH = window.innerHeight;
 
-    // Grid Configuration for Deterministic Layout
-    const cardWidth = 140; // Approximate space including margin
-    const cardHeight = 180;
-    const cols = Math.floor((containerW - 100) / cardWidth);
+    // 1. Calculate Optimal Card Size
+    // We want to fit all photos in the view with some breathing room.
+    // Total Photos
+    const directorCount = appData.directorPhotos ? appData.directorPhotos.length : 0;
+    const memberCount = appData.memberPhotos ? appData.memberPhotos.length : 0;
+    const totalPhotos = directorCount + memberCount;
 
-    let currentDirectorRow = 0;
-    let currentDirectorCol = 0;
+    if (totalPhotos === 0) return;
 
-    // Start directors from top center
-    const directorStartX = (containerW - Math.min(cols, appData.directorPhotos.length) * cardWidth) / 2 + 50;
-    const directorStartY = 100;
+    // Available Area (roughly 80% of screen)
+    const availableArea = (containerW * containerH) * 0.8;
 
-    // 1. Process Director Photos
+    // Area per photo
+    const areaPerPhoto = availableArea / totalPhotos;
+
+    // Aspect Ratio ~ 0.8 (Width/Height) -> Area = w * (w/0.8) = w^2 / 0.8
+    // w^2 = Area * 0.8
+    let idealWidth = Math.sqrt(areaPerPhoto * 0.7);
+
+    // Clamp Size
+    const MIN_WIDTH = 80;
+    const MAX_WIDTH = 250;
+    idealWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, idealWidth));
+
+    const cardWidth = idealWidth;
+    const cardHeight = idealWidth * 1.4; // Height includes padding/caption space
+
+    // 2. Setup Grid
+    const cols = Math.floor((containerW - 50) / (cardWidth + 20)); // +20 for gap
+    if (cols <= 0) return; // Screen too small?
+
+    // Calculate centering offset
+    const actualGridWidth = cols * (cardWidth + 20);
+    const startX = (containerW - actualGridWidth) / 2 + 10;
+    const startY = 80; // Top padding
+
+    let currentRow = 0;
+    let currentCol = 0;
+
+    // Helper to place card
+    const placeCard = (card, index, isDirector) => {
+        const x = startX + (currentCol * (cardWidth + 20));
+        const y = startY + (currentRow * (cardHeight + 20));
+
+        card.style.left = `${x}px`;
+        card.style.top = `${y}px`;
+        card.style.width = `${cardWidth}px`;
+
+        // Slight randomness for rotation only
+        if (isDirector) {
+            card.style.transform = `rotate(0deg)`;
+        } else {
+            card.style.transform = `rotate(${((index % 5) - 2) * 2}deg)`;
+        }
+
+        elements.playgroundCanvas.appendChild(card);
+
+        // Advance Grid
+        currentCol++;
+        if (currentCol >= cols) {
+            currentCol = 0;
+            currentRow++;
+        }
+    };
+
+    // 3. Process Director Photos
     if (appData.directorPhotos) {
         appData.directorPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
             card.classList.add('director');
-
-            // Check for saved position
-            const saved = loadPosition(src);
-            if (saved) {
-                card.style.left = saved.left;
-                card.style.top = saved.top;
-                card.style.zIndex = saved.zIndex || 10;
-                card.style.transform = saved.transform || 'rotate(0deg)';
-                card.style.width = saved.width || '130px';
-                if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
-            } else {
-                // Deterministic Layout (Neat Grid)
-                const x = directorStartX + (currentDirectorCol * cardWidth);
-                const y = directorStartY + (currentDirectorRow * cardHeight);
-
-                card.style.left = `${x}px`;
-                card.style.top = `${y}px`;
-                card.style.transform = `rotate(0deg)`;
-
-                // Update grid position
-                currentDirectorCol++;
-                if (currentDirectorCol >= cols) {
-                    currentDirectorCol = 0;
-                    currentDirectorRow++;
-                }
-            }
-
-            elements.playgroundCanvas.appendChild(card);
+            placeCard(card, index, true);
         });
     }
 
-    // Determine start Y for members
-    let memberStartX = 50;
-    let memberStartY = directorStartY + (currentDirectorRow + 1) * cardHeight + 50;
-    let currentMemberCol = 0;
-    let currentMemberRow = 0;
-
-    // 2. Process Member Photos
+    // 4. Process Member Photos
     if (appData.memberPhotos) {
         appData.memberPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
-
-            // Check for saved position
-            const saved = loadPosition(src);
-            if (saved) {
-                card.style.left = saved.left;
-                card.style.top = saved.top;
-                card.style.zIndex = saved.zIndex || 10;
-                card.style.transform = saved.transform || 'rotate(0deg)';
-                card.style.width = saved.width || '130px';
-                if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
-            } else {
-                // Deterministic Grid Layout
-                const x = memberStartX + (currentMemberCol * cardWidth);
-                const y = memberStartY + (currentMemberRow * cardHeight);
-
-                card.style.left = `${x}px`;
-                card.style.top = `${y}px`;
-                card.style.transform = `rotate(${((index % 5) - 2) * 2}deg)`;
-
-                // Update grid position
-                currentMemberCol++;
-                if (currentMemberCol >= cols) {
-                    currentMemberCol = 0;
-                    currentMemberRow++;
-                }
-            }
-
-            elements.playgroundCanvas.appendChild(card);
+            placeCard(card, index, false);
         });
     }
 }
 
-function setupZoomControl() {
-    const slider = document.getElementById('zoomSlider');
-    if (!slider) return;
-
-    slider.addEventListener('input', (e) => {
-        const size = e.target.value;
-        const cards = document.querySelectorAll('.story-card');
-        cards.forEach(card => {
-            card.style.width = `${size}px`;
-        });
-    });
-}
+// Auto-adjust layout on resize
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(initPlayground, 200);
+});
 
 function createPolaroid(src) {
     const div = document.createElement('div');
