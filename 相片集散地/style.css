@@ -56,6 +56,11 @@ body {
     color: var(--accent-color);
 }
 
+.logo-img {
+    height: 40px;
+    width: auto;
+}
+
 .nav-controls {
     display: flex;
     gap: 15px;
@@ -286,10 +291,8 @@ main {
 
 .story-card:hover {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    z-index: 100 !important;
-    /* Always on top when hovering */
-    transform: scale(1.05) rotate(0deg) !important;
-    /* Straighten on hover */
+    z-index: 9000 !important;
+    /* Removed scale/rotate transform to prevent jitter */
 }
 
 .story-card.dragging {
@@ -387,4 +390,142 @@ main {
     .story-card {
         width: 150px;
     }
+}
+
+/* Floating Button (Bottom Center) */
+.floating-btn {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #e94560, #a61c3c);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 10px 25px rgba(233, 69, 96, 0.5);
+    cursor: pointer;
+    z-index: 10000;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    overflow: hidden;
+}
+
+.floating-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: 0.5s;
+}
+
+.floating-btn:hover {
+    transform: translateX(-50%) scale(1.1) translateY(-5px);
+    box-shadow: 0 15px 35px rgba(233, 69, 96, 0.7);
+}
+
+.floating-btn:hover::before {
+    left: 100%;
+}
+
+.floating-btn i {
+    font-size: 1.8rem;
+}
+
+/* Brewing Effect State */
+.floating-btn.brewing {
+    animation: brewShake 0.5s infinite;
+    background: linear-gradient(135deg, #ff9966, #ff5e62);
+    pointer-events: none;
+}
+
+@keyframes brewShake {
+    0% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+
+    25% {
+        transform: translateX(-52%) rotate(-5deg);
+    }
+
+    50% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+
+    75% {
+        transform: translateX(-48%) rotate(5deg);
+    }
+
+    100% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+}
+
+/* Updated Card Transition - No transition for left/top during drag */
+.story-card {
+    transition: box-shadow 0.2s;
+}
+
+/* Apply smooth transition when zooming/unzooming */
+.story-card.zoomed,
+.story-card.unzooming {
+    transition: box-shadow 0.3s, transform 0.5s ease, width 0.5s ease, left 0.5s ease, top 0.5s ease;
+}
+
+/* Loading Overlay */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s;
+}
+
+.loading-text {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.progress-container {
+    width: 60%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--accent-color);
+    transition: width 0.3s;
+}
+
+/* Moved Left State for Floating Button */
+.floating-btn.moved-left {
+    left: 30px;
+    transform: translateX(0);
+    bottom: 50%;
+    /* Center vertically or just keep at bottom? User said "move to left". keeping at bottom left for now or centering? */
+    /* User said "temporarily move to left". I'll put it at bottom left to avoid obstructing center content */
+    bottom: 30px;
+}
+
+.floating-btn.moved-left:hover {
+    transform: translateX(0) scale(1.1);
 }

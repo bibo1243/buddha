@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>相片集散地</title>
+    <title>來自慈馨念佛班的祝福卡</title>
     <link rel="stylesheet" href="style.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,15 +17,21 @@
 <body>
     <nav class="app-nav">
         <div class="logo">
-            <i class="fas fa-images"></i> <span>相片集散地</span>
+            <i class="fas fa-heart"></i> <span>來自慈馨念佛班的祝福卡</span>
         </div>
         <div class="nav-controls">
-            <!-- Draw Card Button -->
-            <button id="btnRandomPick" class="nav-btn" title="隨機抽卡">
-                <i class="fas fa-random"></i> 抽一張
-            </button>
+            <!-- Empty nav controls or other buttons if needed -->
+
         </div>
     </nav>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="loading-text">祝福集氣中... <span id="loadingPercent">0%</span></div>
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+    </div>
 
     <main id="appContent">
         <!-- View 1: Director Slideshow -->
@@ -54,6 +60,10 @@
                 </div>
             </div>
         </section>
+        <!-- Floating Action Button -->
+        <button id="btnRandomPick" class="floating-btn">
+            <i class="fas fa-random"></i> 抽一張
+        </button>
     </main>
 
     <script src="data.js"></script>
