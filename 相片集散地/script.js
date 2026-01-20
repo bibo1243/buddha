@@ -134,15 +134,21 @@ function renderDirectorPhoto(index) {
 // Photo Playground (Draggable)
 // ==========================================
 function initPlayground() {
-    if (!appData.memberPhotos) return;
-
     const containerW = window.innerWidth;
     const containerH = window.innerHeight;
 
-    appData.memberPhotos.forEach((src, index) => {
+    // Combine photos from both sources
+    let allPhotos = [];
+    if (appData.directorPhotos) allPhotos = allPhotos.concat(appData.directorPhotos);
+    if (appData.memberPhotos) allPhotos = allPhotos.concat(appData.memberPhotos);
+
+    if (allPhotos.length === 0) return;
+
+    allPhotos.forEach((src, index) => {
         const card = createPolaroid(src);
 
         // Random Position
+        // ... (rest of logic remains same, just updated variable name if needed)
         // Keep within bounds (kinda)
         const maxLeft = containerW - 250; // approximate width
         const maxTop = containerH - 300; // approximate height
