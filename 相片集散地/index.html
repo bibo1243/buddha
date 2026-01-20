@@ -50,10 +50,19 @@
         <!-- View 2: Member Drag Playground -->
         <section id="sectionPlayground" class="view-section">
             <div id="playgroundCanvas">
+                <!-- Director Area Background -->
+                <div id="directorAreaLabel">常董勉勵</div>
+
                 <!-- Images will be generated here -->
                 <div class="playground-hint">
                     <i class="fas fa-hand-pointer"></i> 拖曳照片自由排列
                 </div>
+            </div>
+
+            <!-- Size Control -->
+            <div class="size-control-container">
+                <label for="cardSizeRange"><i class="fas fa-expand-arrows-alt"></i> 照片大小</label>
+                <input type="range" id="cardSizeRange" min="100" max="400" value="180">
             </div>
         </section>
     </main>

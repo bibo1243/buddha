@@ -253,31 +253,66 @@ main {
     overflow: hidden;
 }
 
-.playground-hint {
+/* Director Area Background Label */
+#directorAreaLabel {
     position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    top: 50%;
+    right: 5%;
+    /* Position on the right */
+    transform: translateY(-50%);
+    font-size: 5rem;
+    font-weight: bold;
+    color: rgba(255, 215, 0, 0.1);
+    /* Faint gold */
     pointer-events: none;
     z-index: 0;
+    writing-mode: vertical-rl;
+    /* Vertical text */
+    text-orientation: upright;
+    letter-spacing: 1rem;
+    border: 2px dashed rgba(255, 215, 0, 0.2);
+    padding: 40px;
+    border-radius: 20px;
+}
+
+/* Size Control Slider */
+.size-control-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    backdrop-filter: blur(5px);
+}
+
+.size-control-container label {
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+input[type=range] {
+    width: 150px;
+    cursor: pointer;
 }
 
 .story-card {
     position: absolute;
     background: #fff;
     padding: 10px 10px 30px 10px;
-    /* Polaroid style bottom padding */
     box-shadow: var(--shadow-light);
     transform-origin: center;
     transition: box-shadow 0.2s, transform 0.2s;
+    /* Removed width transition for smoother drag, controlled by variable */
     cursor: grab;
     user-select: none;
-    width: 200px;
-    /* Base width */
+    width: var(--card-size, 180px);
+    /* dynamic width */
     z-index: 10;
 }
 

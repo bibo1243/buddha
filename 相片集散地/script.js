@@ -89,18 +89,29 @@ function loadPosition(src) {
 // ==========================================
 // Photo Playground (Draggable)
 // ==========================================
+// ==========================================
+// Photo Playground (Draggable)
+// ==========================================
 function initPlayground() {
     const containerW = window.innerWidth;
     const containerH = window.innerHeight;
-    const centerX = containerW / 2;
-    const centerY = containerH / 2;
 
-    // 1. Process Director Photos
+    // Load saved settings
+    loadCardSize();
+
+    // Size Control Listener
+    const sizeInput = document.getElementById('cardSizeRange');
+    if (sizeInput) {
+        sizeInput.addEventListener('input', (e) => {
+            const size = e.target.value;
+            document.documentElement.style.setProperty('--card-size', `${size}px`);
+            localStorage.setItem('cardSize', size);
+        });
+    }
+
+    // 1. Process Director Photos (Right Area)
     if (appData.directorPhotos) {
-        const radius = 200;
-        const totalDirectors = appData.directorPhotos.length;
-        const angleStep = (2 * Math.PI) / totalDirectors;
-
+        const rightMargin = 100;
         appData.directorPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
             card.classList.add('director');
@@ -114,16 +125,28 @@ function initPlayground() {
                 card.style.transform = saved.transform || 'rotate(0deg)';
                 if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
             } else {
-                // Default Circular Layout
-                const angle = index * angleStep;
-                const groupCenterX = containerW / 2;
-                const groupCenterY = containerH / 2;
-                const x = groupCenterX + radius * Math.cos(angle) - 100;
-                const y = groupCenterY + radius * Math.sin(angle) - 150;
+                // Default Right Grid Layout
+                const cardW = 180;
+                const cardH = 220;
+
+                // Arrange 2 columns on the right
+                const cols = 2;
+                const c = index % cols;
+                const r = Math.floor(index / cols);
+
+                // Position relative to right side
+                // x = Width - (Columns * Width) - Margin + (Col Index * Width)
+                // Let's anchor to right: 200px from right edge is center of rightmost col
+
+                const baseX = containerW - 350; // Base start X
+                const baseY = (containerH / 2) - 300; // Center Y offset
+
+                const x = baseX + (c * 160);
+                const y = baseY + (r * 220);
 
                 card.style.left = `${x}px`;
                 card.style.top = `${y}px`;
-                card.style.transform = `rotate(0deg)`;
+                card.style.transform = `rotate(${Math.random() * 4 - 2}deg)`; // Slight tilt
             }
 
             elements.playgroundCanvas.appendChild(card);
@@ -144,11 +167,13 @@ function initPlayground() {
                 card.style.transform = saved.transform || 'rotate(0deg)';
                 if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
             } else {
-                // Default Random Layout
-                const maxLeft = containerW - 250;
-                const maxTop = containerH - 300;
-                const randomLeft = Math.floor(Math.random() * maxLeft * 0.8) + (maxLeft * 0.1);
-                const randomTop = Math.floor(Math.random() * maxTop * 0.8) + (maxTop * 0.1);
+                // Default Random Layout (Left/Center area)
+                const safeW = containerW - 450; // Leave space for Director area
+                const maxLeft = safeW - 150;
+                const maxTop = containerH - 250;
+
+                const randomLeft = Math.floor(Math.random() * maxLeft * 0.9) + 20;
+                const randomTop = Math.floor(Math.random() * maxTop * 0.8) + 50;
                 const randomRot = Math.floor(Math.random() * 40) - 20;
 
                 card.style.left = `${randomLeft}px`;
@@ -158,6 +183,15 @@ function initPlayground() {
 
             elements.playgroundCanvas.appendChild(card);
         });
+    }
+}
+
+function loadCardSize() {
+    const savedSize = localStorage.getItem('cardSize');
+    if (savedSize) {
+        document.documentElement.style.setProperty('--card-size', `${savedSize}px`);
+        const input = document.getElementById('cardSizeRange');
+        if (input) input.value = savedSize;
     }
 }
 
