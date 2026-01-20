@@ -64,70 +64,12 @@ function switchView(viewName) {
 // ==========================================
 // Director Slideshow
 // ==========================================
+// ==========================================
+// Director Slideshow (Removed/Hidden)
+// ==========================================
 function setupDirectorSlideshow() {
-    if (!appData.directorPhotos || appData.directorPhotos.length === 0) return;
-
-    // Initial Render
-    renderDirectorPhoto(0);
-
-    // Event Listeners
-    elements.prevBtn.addEventListener('click', () => changeSlide(-1));
-    elements.nextBtn.addEventListener('click', () => changeSlide(1));
-
-    // Click image to next
-    elements.directorFrame.addEventListener('click', () => changeSlide(1));
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (state.view !== 'director') return;
-        if (e.key === 'ArrowLeft') changeSlide(-1);
-        if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
-    });
-}
-
-function changeSlide(direction) {
-    const total = appData.directorPhotos.length;
-    let newIndex = state.directorIndex + direction;
-
-    // Loop
-    if (newIndex >= total) newIndex = 0;
-    if (newIndex < 0) newIndex = total - 1;
-
-    state.directorIndex = newIndex;
-    renderDirectorPhoto(newIndex);
-}
-
-function renderDirectorPhoto(index) {
-    const src = appData.directorPhotos[index];
-
-    // Reset opacity instantly for transition effect
-    elements.directorImg.style.opacity = '0';
-    elements.directorFrame.classList.add('loading');
-
-    setTimeout(() => {
-        elements.directorImg.onload = () => {
-            elements.directorImg.style.opacity = '1';
-            elements.directorFrame.classList.remove('loading');
-        };
-
-        elements.directorImg.onerror = () => {
-            console.error('Image failed to load:', src);
-            // Optionally set a placeholder or keep it hidden/low opacity
-            elements.directorImg.alt = '圖片載入失敗: ' + src;
-            elements.directorImg.style.opacity = '0.5';
-            elements.directorFrame.classList.remove('loading');
-        };
-
-        elements.directorImg.src = src;
-        elements.slideCounter.textContent = `${index + 1} / ${appData.directorPhotos.length}`;
-
-        // If image is already complete (cached), manually trigger load handler logic
-        if (elements.directorImg.complete && elements.directorImg.src.indexOf(src) !== -1) {
-            elements.directorImg.style.opacity = '1';
-            elements.directorFrame.classList.remove('loading');
-        }
-
-    }, 200);
+    // Functionality removed as per user request
+    // Keeping function stub to prevent init errors if called
 }
 
 // ==========================================
@@ -136,33 +78,60 @@ function renderDirectorPhoto(index) {
 function initPlayground() {
     const containerW = window.innerWidth;
     const containerH = window.innerHeight;
+    const centerX = containerW / 2;
+    const centerY = containerH / 2;
 
-    // Combine photos from both sources
-    let allPhotos = [];
-    if (appData.directorPhotos) allPhotos = allPhotos.concat(appData.directorPhotos);
-    if (appData.memberPhotos) allPhotos = allPhotos.concat(appData.memberPhotos);
+    // 1. Process Director Photos (Grouped in center/top area)
+    if (appData.directorPhotos) {
+        // Arrange in a circle or grid
+        const radius = 200; // Radius for circular arrangement
+        const totalDirectors = appData.directorPhotos.length;
+        const angleStep = (2 * Math.PI) / totalDirectors;
 
-    if (allPhotos.length === 0) return;
+        appData.directorPhotos.forEach((src, index) => {
+            const card = createPolaroid(src);
+            card.classList.add('director'); // Add gold style
 
-    allPhotos.forEach((src, index) => {
-        const card = createPolaroid(src);
+            // Arrange in a circle around center, or a specific area
+            // Let's put them in a nice arc or circle in the upper center
+            const angle = index * angleStep;
+            // Center position for the director group
+            const groupCenterX = containerW / 2;
+            const groupCenterY = containerH / 2;
 
-        // Random Position
-        // ... (rest of logic remains same, just updated variable name if needed)
-        // Keep within bounds (kinda)
-        const maxLeft = containerW - 250; // approximate width
-        const maxTop = containerH - 300; // approximate height
+            const x = groupCenterX + radius * Math.cos(angle) - 100; // -100 to center the card center
+            const y = groupCenterY + radius * Math.sin(angle) - 150; // -150 to center vertically
 
-        const randomLeft = Math.floor(Math.random() * maxLeft * 0.8) + (maxLeft * 0.1);
-        const randomTop = Math.floor(Math.random() * maxTop * 0.8) + (maxTop * 0.1);
-        const randomRot = Math.floor(Math.random() * 40) - 20; // -20 to 20 deg
+            card.style.left = `${x}px`;
+            card.style.top = `${y}px`;
+            card.style.transform = `rotate(0deg)`; // Straight for dignity
 
-        card.style.left = `${randomLeft}px`;
-        card.style.top = `${randomTop}px`;
-        card.style.transform = `rotate(${randomRot}deg)`;
+            elements.playgroundCanvas.appendChild(card);
+        });
+    }
 
-        elements.playgroundCanvas.appendChild(card);
-    });
+    // 2. Process Member Photos (Randomly scattered)
+    if (appData.memberPhotos) {
+        appData.memberPhotos.forEach((src, index) => {
+            const card = createPolaroid(src);
+
+            const maxLeft = containerW - 250;
+            const maxTop = containerH - 300;
+
+            let randomLeft = Math.floor(Math.random() * maxLeft * 0.8) + (maxLeft * 0.1);
+            let randomTop = Math.floor(Math.random() * maxTop * 0.8) + (maxTop * 0.1);
+
+            // Avoid the exact center where directors are (optional, but simple random is usually fine)
+
+            const randomRot = Math.floor(Math.random() * 40) - 20;
+
+            card.style.left = `${randomLeft}px`;
+            card.style.top = `${randomTop}px`;
+            card.style.transform = `rotate(${randomRot}deg)`;
+
+            elements.playgroundCanvas.appendChild(card);
+        });
+    }
 }
 
 function createPolaroid(src) {
