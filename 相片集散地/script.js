@@ -36,8 +36,12 @@ function init() {
 // Navigation
 // ==========================================
 function setupNavigation() {
-    elements.btnDirector.addEventListener('click', () => switchView('director'));
-    elements.btnPlayground.addEventListener('click', () => switchView('playground'));
+    if (elements.btnDirector) {
+        elements.btnDirector.addEventListener('click', () => switchView('director'));
+    }
+    if (elements.btnPlayground) {
+        elements.btnPlayground.addEventListener('click', () => switchView('playground'));
+    }
 }
 
 function switchView(viewName) {
