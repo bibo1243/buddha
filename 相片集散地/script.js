@@ -149,7 +149,7 @@ function initPlayground() {
     let currentCol = 0;
 
     // Helper to place card
-    const placeCard = (card, index, isDirector) => {
+    const placeCard = (card, index) => {
         const x = startX + (currentCol * (cardWidth + 20));
         const y = startY + (currentRow * (cardHeight + 20));
 
@@ -157,12 +157,9 @@ function initPlayground() {
         card.style.top = `${y}px`;
         card.style.width = `${cardWidth}px`;
 
-        // Slight randomness for rotation only
-        if (isDirector) {
-            card.style.transform = `rotate(0deg)`;
-        } else {
-            card.style.transform = `rotate(${((index % 5) - 2) * 2}deg)`;
-        }
+        // Slight randomness for rotation for ALL cards now
+        card.style.transform = `rotate(${((index % 5) - 2) * 2}deg)`;
+        card.dataset.originalTransform = card.style.transform; // Store for reset
 
         elements.playgroundCanvas.appendChild(card);
 
@@ -179,7 +176,7 @@ function initPlayground() {
         appData.directorPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
             card.classList.add('director');
-            placeCard(card, index, true);
+            placeCard(card, index);
         });
     }
 
@@ -187,7 +184,7 @@ function initPlayground() {
     if (appData.memberPhotos) {
         appData.memberPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
-            placeCard(card, index, false);
+            placeCard(card, index);
         });
     }
 }
@@ -210,13 +207,62 @@ function createPolaroid(src) {
 
     div.appendChild(img);
 
-    // Initial z-index (random only if not loaded)
-    if (!div.style.zIndex) {
-        div.style.zIndex = Math.floor(Math.random() * 10);
-    }
+    // Initial z-index
+    div.style.zIndex = Math.floor(Math.random() * 10);
+    div.dataset.originalZIndex = div.style.zIndex;
 
     setupDrag(div);
+    setupZoomClick(div); // Add click-to-zoom
+
     return div;
+}
+
+function setupZoomClick(element) {
+    element.addEventListener('click', (e) => {
+        if (element.classList.contains('dragging')) return; // Ignore clicks if dragging just finished
+
+        // Toggle Zoom State
+        if (element.classList.contains('zoomed')) {
+            // Unzoom
+            element.classList.remove('zoomed');
+
+            // Restore original styles
+            element.style.left = element.dataset.originalLeft;
+            element.style.top = element.dataset.originalTop;
+            element.style.width = element.dataset.originalWidth;
+            element.style.transform = element.dataset.originalTransform;
+            element.style.zIndex = element.dataset.originalZIndex;
+
+        } else {
+            // Zoom to Center
+            // Save current state first
+            element.dataset.originalLeft = element.style.left;
+            element.dataset.originalTop = element.style.top;
+            element.dataset.originalWidth = element.style.width;
+            // originalTransform is saved at creation or needs update if changed (usually fixed in grid)
+
+            element.classList.add('zoomed');
+
+            // Calculate center
+            const containerW = window.innerWidth;
+            const containerH = window.innerHeight;
+
+            // Target size (larger)
+            const targetWidth = Math.min(containerW, containerH) * 0.8;
+
+            element.style.width = `${targetWidth}px`;
+            element.style.zIndex = 9999; // Topmost
+
+            // Center position (CSS centering often easier, but we use absolute)
+            // Centered: (W - targetW)/2
+            const targetX = (containerW - targetWidth) / 2;
+            const targetY = (containerH - (targetWidth * 1.4)) / 2; // Approx aspect ratio height
+
+            element.style.left = `${targetX}px`;
+            element.style.top = `${targetY}px`;
+            element.style.transform = 'rotate(0deg) scale(1)'; // Straighten
+        }
+    });
 }
 
 function setupDrag(element) {
