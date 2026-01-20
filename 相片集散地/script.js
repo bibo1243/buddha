@@ -73,6 +73,20 @@ function setupDirectorSlideshow() {
 }
 
 // ==========================================
+// Persistence Logic (Local Storage)
+// ==========================================
+function savePosition(src, left, top, zIndex, transform) {
+    const savedData = JSON.parse(localStorage.getItem('photoPositions')) || {};
+    savedData[src] = { left, top, zIndex, transform };
+    localStorage.setItem('photoPositions', JSON.stringify(savedData));
+}
+
+function loadPosition(src) {
+    const savedData = JSON.parse(localStorage.getItem('photoPositions')) || {};
+    return savedData[src];
+}
+
+// ==========================================
 // Photo Playground (Draggable)
 // ==========================================
 function initPlayground() {
@@ -81,53 +95,66 @@ function initPlayground() {
     const centerX = containerW / 2;
     const centerY = containerH / 2;
 
-    // 1. Process Director Photos (Grouped in center/top area)
+    // 1. Process Director Photos
     if (appData.directorPhotos) {
-        // Arrange in a circle or grid
-        const radius = 200; // Radius for circular arrangement
+        const radius = 200;
         const totalDirectors = appData.directorPhotos.length;
         const angleStep = (2 * Math.PI) / totalDirectors;
 
         appData.directorPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
-            card.classList.add('director'); // Add gold style
+            card.classList.add('director');
 
-            // Arrange in a circle around center, or a specific area
-            // Let's put them in a nice arc or circle in the upper center
-            const angle = index * angleStep;
-            // Center position for the director group
-            const groupCenterX = containerW / 2;
-            const groupCenterY = containerH / 2;
+            // Check for saved position
+            const saved = loadPosition(src);
+            if (saved) {
+                card.style.left = saved.left;
+                card.style.top = saved.top;
+                card.style.zIndex = saved.zIndex || 10;
+                card.style.transform = saved.transform || 'rotate(0deg)';
+                if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
+            } else {
+                // Default Circular Layout
+                const angle = index * angleStep;
+                const groupCenterX = containerW / 2;
+                const groupCenterY = containerH / 2;
+                const x = groupCenterX + radius * Math.cos(angle) - 100;
+                const y = groupCenterY + radius * Math.sin(angle) - 150;
 
-            const x = groupCenterX + radius * Math.cos(angle) - 100; // -100 to center the card center
-            const y = groupCenterY + radius * Math.sin(angle) - 150; // -150 to center vertically
-
-            card.style.left = `${x}px`;
-            card.style.top = `${y}px`;
-            card.style.transform = `rotate(0deg)`; // Straight for dignity
+                card.style.left = `${x}px`;
+                card.style.top = `${y}px`;
+                card.style.transform = `rotate(0deg)`;
+            }
 
             elements.playgroundCanvas.appendChild(card);
         });
     }
 
-    // 2. Process Member Photos (Randomly scattered)
+    // 2. Process Member Photos
     if (appData.memberPhotos) {
         appData.memberPhotos.forEach((src, index) => {
             const card = createPolaroid(src);
 
-            const maxLeft = containerW - 250;
-            const maxTop = containerH - 300;
+            // Check for saved position
+            const saved = loadPosition(src);
+            if (saved) {
+                card.style.left = saved.left;
+                card.style.top = saved.top;
+                card.style.zIndex = saved.zIndex || 10;
+                card.style.transform = saved.transform || 'rotate(0deg)';
+                if (parseInt(saved.zIndex) > state.maxZIndex) state.maxZIndex = parseInt(saved.zIndex);
+            } else {
+                // Default Random Layout
+                const maxLeft = containerW - 250;
+                const maxTop = containerH - 300;
+                const randomLeft = Math.floor(Math.random() * maxLeft * 0.8) + (maxLeft * 0.1);
+                const randomTop = Math.floor(Math.random() * maxTop * 0.8) + (maxTop * 0.1);
+                const randomRot = Math.floor(Math.random() * 40) - 20;
 
-            let randomLeft = Math.floor(Math.random() * maxLeft * 0.8) + (maxLeft * 0.1);
-            let randomTop = Math.floor(Math.random() * maxTop * 0.8) + (maxTop * 0.1);
-
-            // Avoid the exact center where directors are (optional, but simple random is usually fine)
-
-            const randomRot = Math.floor(Math.random() * 40) - 20;
-
-            card.style.left = `${randomLeft}px`;
-            card.style.top = `${randomTop}px`;
-            card.style.transform = `rotate(${randomRot}deg)`;
+                card.style.left = `${randomLeft}px`;
+                card.style.top = `${randomTop}px`;
+                card.style.transform = `rotate(${randomRot}deg)`;
+            }
 
             elements.playgroundCanvas.appendChild(card);
         });
@@ -137,19 +164,20 @@ function initPlayground() {
 function createPolaroid(src) {
     const div = document.createElement('div');
     div.className = 'story-card';
+    div.dataset.src = src; // Store src for saving later
 
     const img = document.createElement('img');
     img.src = src;
-    img.draggable = false; // Disable native drag
+    img.draggable = false;
 
     div.appendChild(img);
 
-    // Initial z-index
-    div.style.zIndex = Math.floor(Math.random() * 10);
+    // Initial z-index (random only if not loaded)
+    if (!div.style.zIndex) {
+        div.style.zIndex = Math.floor(Math.random() * 10);
+    }
 
-    // Drag Logic
     setupDrag(div);
-
     return div;
 }
 
@@ -194,6 +222,12 @@ function setupDrag(element) {
     };
 
     const onMouseUp = () => {
+        if (isDragging) {
+            // Save position on end
+            const src = element.dataset.src;
+            savePosition(src, element.style.left, element.style.top, element.style.zIndex, element.style.transform);
+        }
+
         isDragging = false;
         element.classList.remove('dragging');
         document.removeEventListener('mousemove', onMouseMove);
@@ -232,6 +266,12 @@ function setupDrag(element) {
     };
 
     const onTouchEnd = () => {
+        if (isDragging) {
+            // Save position on end
+            const src = element.dataset.src;
+            savePosition(src, element.style.left, element.style.top, element.style.zIndex, element.style.transform);
+        }
+
         isDragging = false;
         element.classList.remove('dragging');
         document.removeEventListener('touchmove', onTouchMove);
