@@ -9,6 +9,7 @@ const state = {
 const elements = {
     btnDirector: document.getElementById('btnDirector'),
     btnPlayground: document.getElementById('btnPlayground'),
+    btnRandomPick: document.getElementById('btnRandomPick'), // New button
     sectionDirector: document.getElementById('sectionDirector'),
     sectionPlayground: document.getElementById('sectionPlayground'),
 
@@ -42,6 +43,29 @@ function setupNavigation() {
     if (elements.btnPlayground) {
         elements.btnPlayground.addEventListener('click', () => switchView('playground'));
     }
+    if (elements.btnRandomPick) {
+        elements.btnRandomPick.addEventListener('click', triggerRandomPick);
+    }
+}
+
+function triggerRandomPick() {
+    const cards = document.querySelectorAll('.story-card');
+    if (cards.length === 0) return;
+
+    // First unzoom any currently zoomed card
+    const zoomed = document.querySelector('.story-card.zoomed');
+    if (zoomed) {
+        zoomed.click(); // Programmatically click to unzoom
+    }
+
+    // Pick random
+    const randomIndex = Math.floor(Math.random() * cards.length);
+    const targetCard = cards[randomIndex];
+
+    // Trigger zoom
+    // We can simulate a click, but need to ensure it's not dragging or blocked
+    // Directly calling the logic or dispatching event is cleaner
+    targetCard.click();
 }
 
 function switchView(viewName) {
